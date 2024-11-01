@@ -51,6 +51,15 @@ class StudentController extends Controller
         return response()->json($data, 201);
     }
 
+    // TODO create show method, with parameter id
+
+    /**
+     * find student data
+     * handle student not found and return response with status code 404
+     * create data response
+     * return data response with status code 200
+     */
+
     public function update(Request $request, $id) {
 
         $student = Student::find($id);
