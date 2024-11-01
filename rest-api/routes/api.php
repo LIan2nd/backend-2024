@@ -11,8 +11,14 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/students', [StudentController::class, 'index']);
 Route::post('/students', [StudentController::class, 'store']);
+
+// TODO create route for show method
+
+Route::get('/students/{id}', [StudentController::class, 'show']);
+
 Route::put('/students/{id}', [StudentController::class, 'update']);
 Route::delete('/students/{id}', [StudentController::class, 'destroy']);
+
 
 
 
