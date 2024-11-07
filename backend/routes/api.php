@@ -9,8 +9,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/animals', [AnimalController::class, "index"]);
-Route::post('/animals', [AnimalController::class, 'store']);
-// put
-Route::put('/animals/{id}', [AnimalController::class, 'update']);
-// delete
-Route::delete('/animals/{id}', [AnimalController::class, 'destroy']);
+Route::post('/animals', [AnimalController::class, "store"]);
+Route::put('/animals/{id}', [AnimalController::class, "update"]);
+Route::delete('/animals/{id}', [AnimalController::class, "destroy"]);

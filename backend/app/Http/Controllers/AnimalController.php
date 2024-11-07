@@ -6,38 +6,37 @@ use Illuminate\Http\Request;
 
 class AnimalController extends Controller
 {
+    public $animals = ['kucing', 'ayam', 'ikan'];
 
-    public $animals = [
-        ["name" => "Kucing"],
-        ["name" => "Ayam"], 
-        ["name" => "Ikan"]
-    ];
-    
     public function index()
     {
-        echo "Menampilkan data animals";
-        foreach($this->animals as $animal) {
-            echo "\n";
-            echo "- " . $animal['name'];
+        $result = [];
+        foreach ($this->animals as $animal) {
+            $result[] = $animal;
         }
+        return response()->json($result);
     }
 
-    public function store(Request $animal)
+    public function store(Request $request)
     {
-        echo "Menambahkan Hewan baru\n";
-        array_push($this->animals, $animal);
-        $this->index();
+        array_push($this->animals, 'musang');
+        return response()->json($this->animals);
     }
-    public function update(Request $animal, string $id)
+
+    public function update(Request $request, $id)
     {
-        echo "Mengupdate Data Hewan id " . $id . "\n";
-        $this->animals[$id - 1] = $animal;
-        $this->index();
+        if ($id == 1 && isset($this->animals[$id])) {
+            $this->animals[$id] = 'burung';
+        }
+        return response()->json($this->animals);
     }
-    public function destroy(string $id)
+
+    public function destroy($id)
     {
-        echo "Menghapus data hewan id " . $id . "\n";
-        unset($this->animals[$id - 1]);
-        $this->index();
+        if ($id == 2 && isset($this->animals[$id])) {
+            unset($this->animals[$id]);
+            $this->animals = array_values($this->animals);
+        }
+        return response()->json($this->animals);
     }
 }
