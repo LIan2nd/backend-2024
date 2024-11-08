@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Student;
+use Illuminate\Support\Facades\Validator;
 
 class StudentController extends Controller
 {
@@ -17,10 +18,17 @@ class StudentController extends Controller
         /**
          * Data untuk dikembalikan ke user setelah request berhasil
          */
-        $data = [
-            "msg" => "Get All Students",
-            "data" => $students,
-        ];
+
+         if(count($students)){
+             $data = [
+                 "message" => "Get All Students",
+                 "data" => $students,
+             ];
+         } else {
+            $data = [
+                "message" => "Student is empty",
+            ];
+         }
         
         /**
          * Mengembalikan data json ke user
@@ -30,20 +38,27 @@ class StudentController extends Controller
 
     public function store(Request $request) {
 
-        $input = [
-            'nama' => $request->nama,
-            'nim' => $request->nim,
-            'email' => $request->email,
-            'jurusan' => $request->jurusan,
-        ];
+        $validator = Validator::make($request->all(), [
+            "nama" => "required",
+            "nim" => "numeric|required",
+            "email" => "email|required",
+            "jurusan" => "required",
+        ]);
 
-        $student = Student::create($input);
+        if($validator->fails()) {
+            return response()->json([
+                'message' => 'validation errors', 
+                'error' => $validator->errors()
+            ], 422);
+        }
 
+        $student = Student::create($request->all());
+        
         /**
          * Data untuk dikembalikan ke user setelah request berhasil
          */
         $data = [
-            "msg" => "Student is created successfully",
+            "message" => "Student is created successfully",
             "data" => $student,
         ];
 
@@ -51,16 +66,7 @@ class StudentController extends Controller
         return response()->json($data, 201);
     }
 
-    // TODO create show method, with parameter id
-
-    /**
-     * find student data
-     * handle student not found and return response with status code 404
-     * create data response
-     * return data response with status code 200
-     */
-
-     public function show(string $id)
+    public function show(string $id)
     {
         $student = Student::find($id);
 
@@ -86,7 +92,7 @@ class StudentController extends Controller
 
         if(!$student) {
             $data = [
-                'msg' => "data not found",
+                'message' => "data not found",
             ];
 
             return response()->json($data, 404);
@@ -102,7 +108,7 @@ class StudentController extends Controller
         $student->update($input);
 
         $data = [
-            "msg" => "Student is updated",
+            "message" => "Student is updated",
             "data" => $student,
         ];
 
@@ -115,7 +121,7 @@ class StudentController extends Controller
 
         if (!$student) {
             $data = [
-                'msg' => 'Student not found'
+                'message' => 'Student not found'
             ];
 
             return response()->json($data, 404);
@@ -124,7 +130,7 @@ class StudentController extends Controller
         Student::destroy($id);
         $students = Student::all();
         $data = [
-            'msg' => 'Student was successfully deleted',
+            'message' => 'Student was successfully deleted',
             'data' => $students
         ];
 
