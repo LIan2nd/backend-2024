@@ -14,7 +14,7 @@ const bersepeda = () => {
   })
 }
 
-const belari = () => {
+const berlari = () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve("berlari selesai.")
